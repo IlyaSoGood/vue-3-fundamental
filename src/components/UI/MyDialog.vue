@@ -2,7 +2,7 @@
   <div
       class="dialog"
       v-if="show"
-      @click="hideDialog"
+      @click.stop="hideDialog"
   >
     <div
         class="dialog__content"

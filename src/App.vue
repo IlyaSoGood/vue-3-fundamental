@@ -1,34 +1,35 @@
 <template>
   <div class="app">
-
-
+    <post-form
+        @create="createPost"
+    />
+    <post-list
+        :posts="posts"
+    />
   </div>
 </template>
 
 <script>
+
+import PostForm from "@/components/PostForm";
+import PostList from "./components/PostList";
 export default {
+  components: {
+    PostList, PostForm
+  },
   data() {
     return {
       posts: [
         {id: 1, title: 'Javascript', body: 'Описание поста'},
         {id: 1, title: 'Javascript', body: 'Описание поста 2'},
         {id: 1, title: 'Javascript', body: 'Описание поста 3'}
-      ],
-      title: '',
-      body: ''
+      ]
     }
   },
   methods: {
-    createPost() {
-      const newPost = {
-        id: Date.now(),
-        title: this.title,
-        body: this.body
-      };
-      this.posts.push(newPost);
-      this.title = '';
-      this.body = '';
-    },
+    createPost(post) {
+      this.posts.push(post)
+    }
   }
 }
 
@@ -44,23 +45,5 @@ export default {
   padding: 20px;
 }
 
-.form {
-  display: flex;
-  flex-direction: column;
-}
-.input {
-  width: 100%;
-  border: 1px solid teal;
-  padding: 10px 15px;
-  margin-top: 15px;
-}
-.btn {
-  margin-top: 15px;
-  align-self: flex-end;
-  padding: 10px 15px;
-  background: none;
-  color: teal;
-  border: 1px solid teal;
-  cursor: pointer;
-}
+
 </style>

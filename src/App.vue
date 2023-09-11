@@ -44,6 +44,4 @@ export default {
 .app {
   padding: 20px;
 }
-
-
 </style>

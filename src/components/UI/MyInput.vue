@@ -1,6 +1,6 @@
 <template>
   <input
-      :value="modelValue"
+      :value="value"
       @input="updateInput"
       type="text"
       class="input"
@@ -11,11 +11,11 @@
 export default {
   name: 'my-input',
   props: {
-    modelValue: [String, Number]
+    value: [String, Number]
   },
   methods: {
     updateInput(event) {
-      this.$emit('update:modelValue', event.target.value)
+      this.$emit('update:value', event.target.value)
     }
   }
 }

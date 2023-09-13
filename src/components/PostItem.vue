@@ -7,16 +7,25 @@
     </div>
     <div class="posts__btns">
       <my-button
+        @click="$router.push(`/posts/${post.id}`)"
+      >
+        Открыть
+      </my-button>
+      <my-button
         @click="$emit('remove', post)"
       >Удалить
       </my-button>
+
     </div>
   </div>
 </template>
 
 <script>
 
+import MyButton from "@/components/UI/MyButton.vue";
+
 export default {
+  components: {MyButton},
   //добавление пропсов в компонент
   props: {
     post: {
@@ -35,5 +44,8 @@ export default {
     display: flex;
     align-items: center;
     justify-content: space-between;
+  }
+  .posts__btns {
+    display: flex;
   }
 </style>

@@ -30,6 +30,7 @@
     />
     <div v-else>Идет загрузка...</div>
 
+    <div ref="observer" class="observer"></div>
 
 <!--    <page-list-->
 <!--        :totalPages="totalPages"-->
@@ -98,7 +99,7 @@ export default {
     },
     async loadMorePosts() {
       try {
-        this.isPostLoading = true;
+        this.page += 1;
         const response = await axios.get('https://jsonplaceholder.typicode.com/posts', {
           params: {
             _limit: this.limit,
@@ -116,6 +117,17 @@ export default {
   },
   mounted() {
     this.fetchPosts();
+    const options = {
+      rootMargin: "0px",
+      threshold: 1.0,
+    };
+    const callback = (entries, observer) => {
+      if (entries[0].isIntersecting && this.page < this.totalPages) {
+        this.loadMorePosts()
+      }
+    };
+    const observer = new IntersectionObserver(callback, options);
+    observer.observe(this.$refs.observer)
   },
   watch: {
     // page() {
@@ -147,6 +159,11 @@ export default {
   margin: 15px 0;
   display: flex;
   justify-content: space-between;
+}
+
+.observer {
+  height: 30px;
+  background: green;
 }
 
 </style>

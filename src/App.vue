@@ -30,15 +30,11 @@
     />
     <div v-else>Идет загрузка...</div>
 
-    <div class="page__wrapper">
-      <div
-          v-for="page in totalPages"
-          :key="page"
-          class="page"
-      >
-        {{ page }}
-      </div>
-    </div>
+    <page-list
+        :totalPages="totalPages"
+        :page="page"
+        @changePage="changePage"
+    />
   </div>
 </template>
 
@@ -46,12 +42,11 @@
 
 import PostForm from "@/components/PostForm";
 import PostList from "./components/PostList";
+import PageList from "@/components/PageList.vue";
 import axios from "axios";
-import MyInput from "@/components/UI/MyInput.vue";
 export default {
   components: {
-    MyInput,
-    PostList, PostForm
+    PostList, PostForm, PageList
   },
   data() {
     return {
@@ -80,6 +75,9 @@ export default {
     showDialog() {
       this.dialogVisible = true;
     },
+    changePage(pageNumber) {
+      this.page = pageNumber;
+    },
     async fetchPosts() {
       try {
         this.isPostLoading = true;
@@ -102,7 +100,9 @@ export default {
     this.fetchPosts();
   },
   watch: {
-
+    page() {
+      this.fetchPosts();
+    }
   },
   computed: {
     sortedPosts() {
@@ -129,15 +129,5 @@ export default {
   margin: 15px 0;
   display: flex;
   justify-content: space-between;
-}
-
-.page__wrapper {
-  display: flex;
-  margin-top: 15px;
-}
-.page {
-  border: 1px solid black;
-  padding: 10px;
-  cursor: pointer;
 }
 </style>

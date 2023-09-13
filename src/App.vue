@@ -30,11 +30,12 @@
     />
     <div v-else>Идет загрузка...</div>
 
-    <page-list
-        :totalPages="totalPages"
-        :page="page"
-        @changePage="changePage"
-    />
+
+<!--    <page-list-->
+<!--        :totalPages="totalPages"-->
+<!--        :page="page"-->
+<!--        @changePage="changePage"-->
+<!--    />-->
   </div>
 </template>
 
@@ -75,9 +76,9 @@ export default {
     showDialog() {
       this.dialogVisible = true;
     },
-    changePage(pageNumber) {
-      this.page = pageNumber;
-    },
+    // changePage(pageNumber) {
+    //   this.page = pageNumber;
+    // },
     async fetchPosts() {
       try {
         this.isPostLoading = true;
@@ -94,15 +95,32 @@ export default {
       } finally {
         this.isPostLoading = false;
       }
+    },
+    async loadMorePosts() {
+      try {
+        this.isPostLoading = true;
+        const response = await axios.get('https://jsonplaceholder.typicode.com/posts', {
+          params: {
+            _limit: this.limit,
+            _page: this.page
+          }
+        });
+        this.totalPages = Math.ceil(response.headers['x-total-count'] / this.limit);
+        this.posts = [...this.posts, ...response.data];
+      } catch (e) {
+        alert('Ошибка')
+      } finally {
+        this.isPostLoading = false;
+      }
     }
   },
   mounted() {
     this.fetchPosts();
   },
   watch: {
-    page() {
-      this.fetchPosts();
-    }
+    // page() {
+    //   this.fetchPosts();
+    // }
   },
   computed: {
     sortedPosts() {
@@ -130,4 +148,5 @@ export default {
   display: flex;
   justify-content: space-between;
 }
+
 </style>

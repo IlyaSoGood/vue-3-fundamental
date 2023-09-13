@@ -1,6 +1,8 @@
 <template>
   <div v-if="posts.length > 0">
+
     <h3>Список пользователей</h3>
+
     <!--Передаем 'remove' еще выше-->
     <transition-group name="post-list">
       <post-item
@@ -10,6 +12,8 @@
           @remove="$emit('remove', post)"
       />
     </transition-group>
+
+    <div class="observer"></div>
 
   </div>
   <h2 v-else style="color: red">
@@ -28,6 +32,16 @@ export default {
       type: Array,
       required: true
     }
+  },
+  mounted() {
+    const options = {
+      rootMargin: "0px",
+      threshold: 1.0,
+    };
+    const callback = function (entries, observer) {
+      /* Content excerpted, show below */
+    };
+    const observer = new IntersectionObserver(callback, options);
   }
 }
 </script>
@@ -44,5 +58,10 @@ export default {
   }
   .post-list-move {
     transition: transform 0.4s ease;
+  }
+
+  .observer {
+    height: 30px;
+    background: green;
   }
 </style>

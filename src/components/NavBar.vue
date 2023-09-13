@@ -14,7 +14,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style>
   .navbar {
     height: 50px;
     background-color: lightgray;

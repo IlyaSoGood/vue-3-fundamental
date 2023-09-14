@@ -31,11 +31,7 @@
     <div v-else>Идет загрузка...</div>
 
     <div
-        v-intersection:[stopIntersect]="{
-          cb: loadMorePosts,
-          // page: this.page,
-          // totalPages: this.totalPages,
-        }"
+        v-intersection="loadMorePosts"
         class="observer"
     ></div>
 
@@ -62,7 +58,6 @@ export default {
       page: 1,
       limit: 10,
       totalPages: 0,
-      stopIntersect: !(this.page < this.totalPages),
       sortOptions: [
         {value: 'title', name: 'По названию'},
         {value: 'body', name: 'По содержимому'}

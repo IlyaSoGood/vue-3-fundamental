@@ -4,6 +4,7 @@
     <my-input
         v-model.trim="post.title"
         placeholder="Название"
+        v-focus
     />
     <my-input
         v-model.trim="post.body"

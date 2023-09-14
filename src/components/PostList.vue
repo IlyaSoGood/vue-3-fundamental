@@ -1,7 +1,7 @@
 <template>
   <div class="post-list" v-if="posts.length > 0">
 
-    <h3>Список пользователей</h3>
+    <h3>Список постов</h3>
 
     <!--Передаем 'remove' еще выше-->
     <transition-group name="post-list">

@@ -1,17 +1,11 @@
 <template>
   <div>
-    <h2>{{ $store.state.isAuth ? "Пользователь авторизован" : "Авторизуйтесь, чтобы войти" }}</h2>
-    <h2>{{ $store.getters.doubleLikes }}</h2>
-    <div>
-      <my-button @click="$store.commit('incrementsLikes')">Лайк</my-button>
-      <my-button @click="$store.commit('decrementLikes')">Дизлайк</my-button>
-    </div>
-
-
     <h1>Страница с постами</h1>
 
+    <!--единственный вариант c Vuex - прокидывать соответствующий пропс - и прослушивать событие-->
     <my-input
-        v-model="searchQuery"
+        :model-value="searchQuery"
+        @update:model-value="setSearchQuery"
         placeholder="Поиск..."
     />
 
@@ -21,8 +15,10 @@
       >Создать пользователя
       </my-button>
 
+      <!--единственный вариант c Vuex - прокидывать соответствующий пропс - и прослушивать событие-->
       <my-select
-          v-model="selectedSort"
+          :model-value="selectedSort"
+          @update:model-value="setSelectedSort"
           :options="sortOptions"
       />
     </div>
@@ -34,7 +30,7 @@
     </my-dialog>
 
     <post-list
-        :posts="sortAndSearchedPosts"
+        :posts="sortedAndSearchedPosts"
         @remove="removePost"
         v-if="!isPostLoading"
     />
@@ -53,94 +49,59 @@
 import PostForm from "@/components/PostForm.vue";
 import PostList from "@/components/PostList.vue";
 import PageList from "@/components/PageList.vue";
-import axios from "axios";
-import MyButton from "@/components/UI/MyButton.vue";
+// import axios from "axios";
+import {mapState, mapGetters, mapActions, mapMutations} from "vuex";
+
 export default {
   components: {
-    MyButton,
     PostList, PostForm, PageList
   },
   data() {
     return {
-      posts: [],
       dialogVisible: false,
-      isPostLoading: false,
-      searchQuery: '',
-      selectedSort: '',
-      page: 1,
-      limit: 10,
-      totalPages: 0,
-      sortOptions: [
-        {value: 'title', name: 'По названию'},
-        {value: 'body', name: 'По содержимому'}
-      ]
     }
   },
   methods: {
+    ...mapMutations({
+      setPage: 'post/setPage',
+      setSearchQuery: 'post/setSearchQuery',
+      setSelectedSort: 'post/setSelectedSort'
+    }),
+    ...mapActions({
+      loadMorePosts: 'post/loadMorePosts',
+      fetchPosts: 'post/fetchPosts'
+    }),
     createPost(post) {
-      this.posts.push(post);
+      // this.posts.push(post);
       this.dialogVisible = false;
     },
     removePost(post) {
-      this.posts = this.posts.filter(p => p.id !== post.id)
+      // this.posts = this.posts.filter(p => p.id !== post.id)
     },
     showDialog() {
       this.dialogVisible = true;
     },
-    // changePage(pageNumber) {
-    //   this.page = pageNumber;
-    // },
-    async fetchPosts() {
-      try {
-        this.isPostLoading = true;
-        const response = await axios.get('https://jsonplaceholder.typicode.com/posts', {
-          params: {
-            _limit: this.limit,
-            _page: this.page
-          }
-        });
-        this.totalPages = Math.ceil(response.headers['x-total-count'] / this.limit);
-        this.posts = response.data;
-      } catch (e) {
-        alert('Ошибка')
-      } finally {
-        this.isPostLoading = false;
-      }
-    },
-    async loadMorePosts() {
-      try {
-        this.page += 1;
-        const response = await axios.get('https://jsonplaceholder.typicode.com/posts', {
-          params: {
-            _limit: this.limit,
-            _page: this.page
-          }
-        });
-        this.totalPages = Math.ceil(response.headers['x-total-count'] / this.limit);
-        this.posts = [...this.posts, ...response.data];
-      } catch (e) {
-        alert('Ошибка')
-      } finally {
-        this.isPostLoading = false;
-      }
-    }
   },
   mounted() {
     this.fetchPosts();
   },
   watch: {
-    // Ручной пагинатор
-    // page() {
-    //   this.fetchPosts();
-    // }
   },
   computed: {
-    sortedPosts() {
-      return [...this.posts].sort((post1, post2) => post1[this.selectedSort]?.localeCompare(post2[this.selectedSort]))
-    },
-    sortAndSearchedPosts() {
-      return this.sortedPosts.filter(post => post.title.toLowerCase().includes(this.searchQuery.toLowerCase()))
-    }
+    ...mapState({
+      posts: state => state.post.posts,
+      isPostLoading: state => state.post.isPostLoading,
+      searchQuery: state => state.post.searchQuery,
+      selectedSort: state => state.post.selectedSort,
+      page: state => state.post.page,
+      limit: state => state.post.limit,
+      totalPages: state => state.post.totalPages,
+      sortOptions: state => state.post.sortOptions
+    }),
+    ...mapGetters({
+      sortedPosts: 'post/sortedPosts',
+      sortedAndSearchedPosts: 'post/sortedAndSearchedPosts'
+    })
   }
 }
 

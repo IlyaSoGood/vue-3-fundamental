@@ -1,5 +1,5 @@
 <template>
-  <div v-if="posts.length > 0">
+  <div class="post-list" v-if="posts.length > 0">
 
     <h3>Список пользователей</h3>
 
@@ -38,6 +38,9 @@ export default {
 </script>
 
 <style scoped>
+  .post-list {
+    overflow: hidden;
+  }
   .post-list-enter-active,
   .post-list-leave-active {
     transition: all 0.4s ease;

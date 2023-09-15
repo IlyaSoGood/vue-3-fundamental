@@ -5,26 +5,37 @@ import About from "@/pages/About.vue";
 import PostIdPage from "@/pages/PostIdPage.vue";
 import PostPageWithStore from "@/pages/PostPageWithStore.vue";
 
+
+//!Динамический импорт не работает
+
 const routes = [
     {
         path: '/',
-        component: Main
+        name: 'main',
+        component: () => import(/* webpackChunkName: "main" */ '@/pages/Main.vue')
     },
     {
         path: '/posts',
-        component: PostPage
+        // component: PostPage
+        name: 'posts',
+        component: () => import(/* webpackChunkName: "posts" */ '@/pages/PostPage.vue')
     },
     {
         path: '/about',
-        component: About
+        name: 'about',
+        component: () => import(/* webpackChunkName: "about" */ '@/pages/About.vue')
     },
     {
         path: '/posts/:id',
-        component: PostIdPage
+        // component: PostIdPage
+        name: 'post-id',
+        component: () => import(/* webpackChunkName: "post-id" */ '@/pages/PostIdPage.vue')
     },
     {
         path: '/store',
-        component: PostPageWithStore
+        // component: PostPageWithStore
+        name: 'store',
+        component: () => import(/* webpackChunkName: "store" */ '@/pages/PostPageWithStore.vue')
     }
 ]
 

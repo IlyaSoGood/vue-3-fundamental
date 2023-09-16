@@ -1,41 +1,35 @@
 <template>
   <div>
-    <h2>{{ likes }}</h2>
-    <my-button @click="addLikes">Лайк</my-button>
     <h1>Страница с постами</h1>
-<!--    <my-input-->
-<!--        v-model="searchQuery"-->
-<!--        placeholder="Поиск..."-->
-<!--    />-->
+    <my-input
+        v-model="searchQuery"
+        placeholder="Поиск..."
+    />
 
-<!--    <div class="app__btns">-->
-<!--      <my-button-->
-<!--          @click="showDialog"-->
-<!--      >Создать пользователя-->
-<!--      </my-button>-->
-<!--      <my-select-->
-<!--          v-model="selectedSort"-->
-<!--          :options="sortOptions"-->
-<!--      />-->
-<!--    </div>-->
+    <div class="app__btns">
+      <my-button
+      >Создать пользователя
+      </my-button>
+      <my-select
+          v-model="selectedSort"
+          :options="sortOptions"
+      />
+    </div>
 
-<!--    <my-dialog v-model:show="dialogVisible">-->
-<!--      <post-form-->
-<!--          @create="createPost"-->
-<!--      />-->
-<!--    </my-dialog>-->
+    <my-dialog v-model:show="dialogVisible">
+      <post-form
+      />
+    </my-dialog>
 
-<!--    <post-list-->
-<!--        :posts="sortAndSearchedPosts"-->
-<!--        @remove="removePost"-->
-<!--        v-if="!isPostLoading"-->
-<!--    />-->
-<!--    <div v-else>Идет загрузка...</div>-->
+    <post-list
+        :posts="sortedAndSearchedPosts"
+        v-if="!isPostLoading"
+    />
+    <div v-else>Идет загрузка...</div>
 
-<!--    <div-->
-<!--        v-intersection="loadMorePosts"-->
-<!--        class="observer"-->
-<!--    ></div>-->
+    <div
+        class="observer"
+    ></div>
 
   </div>
 </template>
@@ -45,12 +39,11 @@
 import PostForm from "@/components/PostForm.vue";
 import PostList from "@/components/PostList.vue";
 import PageList from "@/components/PageList.vue";
-import axios from "axios";
-import {ref} from "vue";
-import MyButton from "@/components/UI/MyButton.vue";
+import {usePosts} from "@/hooks/usePosts";
+import useSortedPosts from "@/hooks/useSortedPosts";
+import useSortedAndSearchedPosts from "@/hooks/useSortedAndSearchedPosts";
 export default {
   components: {
-    MyButton,
     PostList, PostForm, PageList
   },
   data() {
@@ -63,12 +56,17 @@ export default {
     }
   },
   setup(props) {
-    const likes = ref(0);
-    const addLikes = () =>
-        likes.value += 1;
+    const {posts, isPostLoading, totalPages} = usePosts(10);
+    const {sortedPosts, selectedSort} = useSortedPosts(posts);
+    const {searchQuery, sortedAndSearchedPosts} = useSortedAndSearchedPosts(sortedPosts);
+
     return {
-      likes,
-      addLikes
+      posts,
+      totalPages,
+      isPostLoading,
+      selectedSort,
+      searchQuery,
+      sortedAndSearchedPosts
     }
   }
 }

@@ -36,6 +36,12 @@ const routes = [
         // component: PostPageWithStore
         name: 'store',
         component: () => import(/* webpackChunkName: "store" */ '@/pages/PostPageWithStore.vue')
+    },
+    {
+        path: '/composition',
+        // component: PostPageWithStore
+        name: 'composition',
+        component: () => import(/* webpackChunkName: "store" */ '@/pages/PostPageCompositionApi.vue')
     }
 ]
 

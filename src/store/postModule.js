@@ -71,9 +71,7 @@ export const postModule = {
                         _page: state.page
                     }
                 });
-                // this.totalPages = Math.ceil(response.headers['x-total-count'] / this.limit);
                 commit('setTotalPages', Math.ceil(response.headers['x-total-count'] / state.limit))
-                // this.posts = [...this.posts, ...response.data];
                 commit('setPosts', [...state.posts, ...response.data])
             } catch (e) {
                 alert('Ошибка')
